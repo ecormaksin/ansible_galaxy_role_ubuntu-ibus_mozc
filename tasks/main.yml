@@ -1,0 +1,28 @@
+---
+# tasks file for ansible_galaxy_role_ubuntu-ibus_mozc
+
+- name: "Ibus-Mozc | install"
+  become: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+  apt:
+    pkg: 
+      - ibus-mozc
+    state: present
+    update_cache: yes
+
+- name: "Ibus-Mozc | copy file"
+  become: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+  copy:
+    src: "{{ export_im_module.file.name }}"
+    dest: "{{ export_im_module.file.dest_path }}"
+
+- name: "Ibus-Mozc | set customize settings"
+  ignore_errors: "{{ ansible_check_mode }}"
+  shell:
+    cmd: |
+      cat "{{ shell.rc.file.path }}" | grep ". {{ export_im_module.file.dest_path }}" >/dev/null
+      if [ $? -ne 0 ]; then
+          echo -n "\n" >> "{{ shell.rc.file.path }}"
+          echo ". {{ export_im_module.file.dest_path }}" >> "{{ shell.rc.file.path }}"
+      fi

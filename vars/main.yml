@@ -1,0 +1,12 @@
+---
+# vars file for ansible_galaxy_role_ubuntu-ibus_mozc
+
+export_im_module:
+  file:
+    name: export_im_module
+    dest_path: /etc/export_im_module
+
+shell:
+  rc:
+    file:
+      path: $HOME/.bashrc
